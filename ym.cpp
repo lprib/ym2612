@@ -24,15 +24,15 @@ void write_ym(uint8_t data) {
 */
 void setreg_bank(uint8_t reg, uint8_t data, bool bank_2) {
   YM_CTRL_PORT &= ~_BV(YM_A0); // A0 low (select register)
-  
-  if(!bank_2) {
+
+  if (!bank_2) {
     //bank 1
     YM_CTRL_PORT &= ~_BV(YM_A1);
   } else {
     //bank 2
     YM_CTRL_PORT |= _BV(YM_A1);
   }
-  
+
   write_ym(reg);
   YM_CTRL_PORT |= _BV(YM_A0);  // A0 high (write register)
   write_ym(data);

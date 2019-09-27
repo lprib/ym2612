@@ -1,5 +1,6 @@
 #include "patch.h"
 #include "ym.h"
+#include <Arduino.h>
 
 //param channel: the channel number from 0 to five
 //returns the bank (0=bank1, 1=bank2)

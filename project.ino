@@ -1,5 +1,9 @@
 #include "ym.h"
 #include "patch.h"
+#include "melody.h"
+
+unsigned int tones[] = {NOTE_C, NOTE_E, NOTE_G, NOTE_B};
+int blocks[] = {4, 4, 4, 4};
 
 /** Program entry point */
 int main2(void) {
@@ -61,76 +65,76 @@ int main2(void) {
 }
 
 int main(void) {
+  //  Serial.begin(9600);
   setup_ym2612();
+
+  struct channel_config_s my_chan = {
+    .feedback = 0,
+    .algorithm = 7,
+    .stereo_left_enable = 1,
+    .stereo_right_enable = 1,
+    .am_sensitivity = 0,
+    .fm_sensitivity = 0,
+    .operators = {
+      {
+        .detune_sign = 0,
+        .detune = 0,
+        .multiple = 1,
+        .total_level = 0,
+        .rate_scaling = 3,
+        .attack_rate = 1,
+        .amplitude_modulation = 0,
+        .first_decay_rate = 0,
+        .second_decay_rate = 0,
+        .second_decay_level = 15,
+        .release_rate = 2
+      },
+      DEFAULT_OPERATOR_CONFIG,
+      DEFAULT_OPERATOR_CONFIG,
+      DEFAULT_OPERATOR_CONFIG
+    }
+  };
+
   struct global_config_s g = {
     .lfo_enable = 0,
     .lfo_frequency = 0,
     .channels = {
-      {
-        .feedback = 0,
-        .algorithm = 4,
-        .stereo_left_enable = 1,
-        .stereo_right_enable = 1,
-        .am_sensitivity = 0,
-        .fm_sensitivity = 0,
-        .operators = {
-          {
-            .detune_sign = 0,
-            .detune = 0,
-            .multiple = 1,
-            .total_level = 0,
-            .rate_scaling = 0,
-            .attack_rate = 31,
-            .amplitude_modulation = 0,
-            .first_decay_rate = 5,
-            .second_decay_rate = 5,
-            .second_decay_level = 8,
-            .release_rate = 3
-          },
-          {
-            .detune_sign = 0,
-            .detune = 3,
-            .multiple = 3,
-            .total_level = 0,
-            .rate_scaling = 0,
-            .attack_rate = 31,
-            .amplitude_modulation = 0,
-            .first_decay_rate = 16,
-            .second_decay_rate = 16,
-            .second_decay_level = 8,
-            .release_rate = 3
-          },
-          {
-            .detune_sign = 1,
-            .detune = 2,
-            .multiple = 2,
-            .total_level = 0,
-            .rate_scaling = 0,
-            .attack_rate = 31,
-            .amplitude_modulation = 0,
-            .first_decay_rate = 16,
-            .second_decay_rate = 16,
-            .second_decay_level = 8,
-            .release_rate = 3
-          },
-          DEFAULT_OPERATOR_CONFIG,
-        }
-      },
       DEFAULT_CHANNEL_CONFIG,
       DEFAULT_CHANNEL_CONFIG,
       DEFAULT_CHANNEL_CONFIG,
-      DEFAULT_CHANNEL_CONFIG,
-      DEFAULT_CHANNEL_CONFIG
+      my_chan,
+      my_chan,
+      my_chan
     }
   };
 
   write_global_config(&g);
-  set_freq(0, 1200, 3);
-  
-  for(;;) {
-    set_key(0, true);
-    _delay_ms(200);
-    set_key(0, false);
-    _delay_ms(200);
+//    set_freq(0, 600, 5);
+  set_freq(3, tones[0], blocks[0]);
+  set_freq(4, tones[1], blocks[1]);
+  set_freq(5, tones[2], blocks[2]);
+//  set_freq(3, tones[3], blocks[3]);
+  for (;;) {
+//    set_key(1, true);
+    set_key(3, true);
+    set_key(4, true);
+    set_key(5, true);
+    _delay_ms(1000);
+//    set_key(1, false);
+    set_key(3, false);
+    set_key(4, false);
+    set_key(5, false);
+    _delay_ms(100);
   }
+
+  //  int tone_index = 0;
+  //  for(;;) {
+  //    set_freq(0, tones[tone_index], blocks[tone_index]);
+  //    set_key(0, true);
+  //    _delay_ms(200);
+  //    set_key(0, false);
+  //    _delay_ms(100);
+  //    tone_index++;
+  //    tone_index %= sizeof(tones)/sizeof(int);
+  //  }
 }

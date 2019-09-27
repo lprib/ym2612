@@ -10,7 +10,7 @@ typedef unsigned char u6;
 typedef unsigned char u7;
 typedef unsigned char u8;
 
-typedef unsigned char u11;
+typedef unsigned int u11;
 
 //NB: all fields MUST be able to fit into their type size (eg any u3 must be < 8)
 struct operator_config_s {
