@@ -1,5 +1,5 @@
 #include "ym.h"
-
+#include <Arduino.h>
 /**
    Send raw data to the YM2612
 
@@ -7,6 +7,7 @@
 */
 void write_ym(uint8_t data) {
   YM_CTRL_PORT &= ~_BV(YM_CS); // CS LOW
+  
   YM_DATA_PORT = data;
   _delay_us(1);
   YM_CTRL_PORT &= ~_BV(YM_WR); // Write data
@@ -46,6 +47,7 @@ void setreg(uint8_t reg, uint8_t data) {
 void setup_ym2612() {
   /* Pins setup */
   YM_CTRL_DDR |= _BV(YM_IC) | _BV(YM_CS) | _BV(YM_WR) | _BV(YM_RD) | _BV(YM_A0) | _BV(YM_A1);
+  
   YM_DATA_DDR = 0xFF;
   YM_MCLOCK_DDR |= _BV(YM_MCLOCK);
   YM_CTRL_PORT |= _BV(YM_IC) | _BV(YM_CS) | _BV(YM_WR) | _BV(YM_RD); /* IC, CS, WR and RD HIGH by default */
@@ -53,6 +55,7 @@ void setup_ym2612() {
 
   /* F_CPU / 2 clock generation */
   TCCR1A = _BV(COM1A0);            /* Toggle OCA1 on compare match */
+  
   TCCR1B = _BV(WGM12) | _BV(CS10); /* CTC mode with prescaler /1 */
   TCCR1C = 0;                      /* Flag reset */
   TCNT1 = 0;                       /* Counter reset */

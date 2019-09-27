@@ -6,7 +6,7 @@ unsigned int tones[] = {NOTE_C, NOTE_E, NOTE_G, NOTE_B};
 int blocks[] = {4, 4, 4, 4};
 
 /** Program entry point */
-int main2(void) {
+int main(void) {
   setup_ym2612();
 
   /* YM2612 Test code */
@@ -64,7 +64,7 @@ int main2(void) {
   return 0;
 }
 
-int main(void) {
+int main2(void) {
   //  Serial.begin(9600);
   setup_ym2612();
 
