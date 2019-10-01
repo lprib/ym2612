@@ -118,6 +118,13 @@ void setup() {
   init_pots();
 }
 
+long keyPressTimer_up = 0;
+bool keyState_up = false;
+
+long keyPressTimer_dn = 0;
+bool keyState_dn = false;
+
+int octave = 4;
 
 void loop() {
   update_pots();
@@ -132,7 +139,7 @@ void loop() {
       for (int j = 0; j < NUM_POLY; j++) {
         if (poly_state[j] == -1) {
           //free poly state
-          set_freq(j, keyboard_notes[i], 3);
+          set_freq(j, keyboard_notes[i], octave);
           set_key(j, true);
           poly_state[j] = i;
           break;
@@ -150,6 +157,47 @@ void loop() {
     }
     keyboard_state[i] = new_state;
   }
+
+  keyPressTimer_up++;
+  if(keyPressTimer_up > 50) {
+    bool newState_up = key_shift_values[10];
+    if(newState_up != keyState_up) {
+      //state change
+      if(newState_up && !keyState_up) {
+//        Serial.println("rising");
+      } else {
+//        Serial.println("fallig");
+//          Serial.println("octave dn");
+        //btn code here
+        octave++;
+        octave = constrain(octave, 0, 7);
+        Serial.println(octave);
+      }
+      keyPressTimer_up = 0;
+      keyState_up = newState_up;
+    }
+  }
+
+
+  keyPressTimer_dn++;
+  if(keyPressTimer_dn > 50) {
+    bool newState_dn = key_shift_values[11];
+    if(newState_dn != keyState_dn) {
+      //state change
+      if(newState_dn && !keyState_dn) {
+//        Serial.println("rising");
+      } else {
+//        Serial.println("oct up");
+        octave--;
+        octave = constrain(octave, 0, 7);
+      }
+      keyPressTimer_dn = 0;
+      keyState_dn = newState_dn;
+    }
+  }
+
+  
+  
   //    _delay_ms(20);
 
       if(pot_changed(4, 7, &fm_amount)) {
